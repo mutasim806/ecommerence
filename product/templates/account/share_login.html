@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load calculation %}
+
+{%block title%}Dashboard {% endblock title%}
+{%block content%}
+
+
+	<link href="/static/assets/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color"/>
+	<!-- END GLOBAL MANDATORY STYLES -->
+	<!-- BEGIN PAGE LEVEL STYLES -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/toastr.min.css' %}">
+    <style>
+
+    body{
+        background-image: url("{% static 'images/share_bg.png' %}");
+        background-size: 100% 100%;
+
+    }
+    .modal-backdrop.in {
+    opacity: 0.4 !important;
+}
+    .login {
+  background-color: #666 !important;
+}
+
+.login-form{
+    padding: 0px;
+    margin: 0px;
+    color: #fff0ff !important;
+}
+
+
+.control-group {
+  margin-bottom: 20px !important;
+}
+
+.input-icon .m-wrap {
+  margin: 0px !important;
+}
+.form-title {
+  font-weight: 300;
+  margin-bottom: 25px;
+}
+
+.form-actions {
+  background-color: transparent;
+  clear: both;
+  border: 0px;
+  border-bottom1: 1px solid #999;
+  padding: 0px 30px 25px 30px;
+  margin-left: -30px;
+  margin-right: -30px;
+}
+
+.form-actions .checkbox {
+  margin-top: 8px;
+  display: inline-block;
+}
+
+.form-actions .checkbox span {
+  margin-left: 5px;
+}
+
+.form-actions .btn {
+  margin-top: 1px;
+}
+.select2-container i {
+  display: inline-block;
+  color: #ccc;
+  z-index: 1;
+  margin: 2px 4px 4px 3px;
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.select2-container a span {
+  font-size: 13px;
+}
+
+.select2-container a span img {
+  margin-left: 4px;
+}
+
+
+    </style>
+{% block header%}
+    {% endblock %}
+    {% block add_user %}
+        {% endblock %}
+
+<div class="modal fade" data-keyboard="false" id="share_login" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Login</h4>
+            </div>
+            <div class="modal-body">
+            <div class="panel-body">
+
+                <div class="row">
+                    <div class="col">
+                        <div class="col col-md-6 brder" style="border-right: 1px solid;">
+                            <a href="{% url 'social:begin' 'facebook' %}" class="btn btn-block btn-social btn-facebook" style="background-color: #3B5998; color: rgb(255, 255, 255); margin-top: 10px;">
+                                <span class="fa fa-facebook"></span> Sign in with Facebook
+                            </a>
+                            <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-block btn-social btn-google" style="background-color: #DD4B39; color: rgb(255, 255, 255); margin-top: 10px;">
+                                <span class="fa fa-google"></span> Sign in with Google
+                            </a>
+                        </div>
+                        <div class="col col-md-6">
+
+                            <form id="loginform" class="form-vertical login-form"
+              action="{% url 'account_login' %}?next={{ next }}{%if request.GET.backurl%}&backurl={{request.GET.backurl}}{%endif%}" role="form" method="post">
+
+            {% csrf_token %}
+
+            <h3 class="form-title">Log into your account</h3>
+			{% if not form.non_field_errors %}
+				<div class="alert alert-error hide">
+					<button class="close" data-dismiss="alert"></button>
+					<span>Enter any Email and password.</span>
+				</div>
+			{% endif %}
+        	{% if form.non_field_errors %}
+				<div class="alert alert-error">
+					<button class="close" data-dismiss="alert"></button>
+
+                {% if form.non_field_errors.0 == 'This account is inactive.' %}
+                    <span>Account Requires Verification.<br> <a id="resend_mail" href="javascript:void(0);">Send Email Link.</a></span>
+                {% else %}
+                    <span>{{ form.non_field_errors.0 }}</span>
+                {% endif %}
+				</div>
+        	{% endif %}
+                            <input type="hidden" value="{{ client_user.id }}" id="client_id" name="client_id">
+			<div class="control-group">
+             {% if form.email.errors %}<div class="row">{{ form.email.errors }}</div>{% endif %}
+				<!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+				<label class="control-label visible-ie8 visible-ie9">Email</label>
+				<div class="form-group">
+                        <input class="form-control" required id="id_email" type="email" class="m-wrap placeholder-no-fix" name="email"  value="" placeholder="Email">
+
+				</div>
+			</div>
+			<div class="control-group">
+                {% if form.password.errors %}<div class="row">{{ form.password.errors }}</div>{% endif %}
+				<label class="control-label visible-ie8 visible-ie9">Password</label>
+				<div class="form-group">
+                        <input class="form-control" required id="id_password" autocomplete="off" type="password" class="m-wrap placeholder-no-fix" name="password" placeholder="Password">
+
+				</div>
+			</div>
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary pull-right">
+				Login <i class="m-icon-swapright m-icon-white"></i>
+				</button>
+			</div>
+
+
+		</form>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+           </div>
+        </div>
+    </div>
+</div>
+
+
+ {%endblock content%}
+ {% block js%}
+      <!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script>
+$('#share_login').modal('show');
+action_to_warning = false;
+</script>
+ <script src="/static/assets/plugins/jquery-1.10.1.min.js" type="text/javascript"></script>
+	<script src="/static/assets/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+	<!-- IMPORTANT! Load jquery-ui-1.10.1.custom.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
+	<script src="/static/assets/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script>
+	<script src="/static/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script><!--[if lt IE 9]>
+
+	<![endif]-->
+	<script src="/static/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+	<script src="/static/assets/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+	<script src="/static/assets/plugins/jquery.cookie.min.js" type="text/javascript"></script>
+	<!-- END CORE PLUGINS -->
+	<!-- BEGIN PAGE LEVEL PLUGINS -->
+	<script src="/static/assets/plugins/jquery-validation/dist/jquery.validate.min.js" type="text/javascript"></script>
+	<script src="/static/assets/plugins/backstretch/jquery.backstretch.min.js" type="text/javascript"></script>
+	<script src="/static/assets/scripts/app.js" type="text/javascript"></script>
+	<script src="/static/assets/scripts/login-soft.js" type="text/javascript"></script>
+
+{%endblock js%}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Log Out{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+    <div class="text-center">
+        <form method="POST" action="{% url "account_logout" %}" style="margin-top: 100px;">
+            <fieldset>
+                {% csrf_token %}
+                <h3>Are you sure you want to log out?</h3>
+                <button type="submit" class="btn btn-primary">Confirm</button>
+                <a class="btn btn-primary" href="{% url 'product:show' %}">Back</a>
+            </fieldset>
+        </form>
+    </div>
+    {% block footer %}
+    {% endblock %}
+    {% block copyright %}
+    {% endblock %}
+{% endblock %}
