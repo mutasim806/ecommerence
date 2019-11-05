@@ -44,7 +44,7 @@ class TestModels(TestCase):
     def test_Product(self):
         self.assertEquals(self.product.product_name, 'Iphone')
         self.assertEquals(self.product.category.category_name, 'Mobile')
-        self.assertEquals(str(self.product.product_name), 'Iphone')
+        self.assertEquals(str(self.product), self.product.product_name)
 
     def test_ProductDetails(self):
         self.assertEquals(self.ProductDetails.price, 2100.00)
