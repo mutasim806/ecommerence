@@ -47,8 +47,9 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            python manage.py test
-
+            coverage run manage.py test
+            coverage combine
+            coverage report -m
       - store_artifacts:
           path: test-reports
           destination: test-reports
