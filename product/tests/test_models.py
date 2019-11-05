@@ -46,6 +46,10 @@ class TestModels(TestCase):
         self.assertEquals(self.product.category.category_name, 'Mobile')
         self.assertEquals(f'{self.product.product_name}', 'Iphone')
 
+    def test_productid(self):
+        post = Product.objects.get(id=1)
+        self.assertEquals(f'{post.product_name}', 'Iphone')
+
     def test_ProductDetails(self):
         self.assertEquals(self.ProductDetails.price, 2100.00)
         self.assertEquals(self.product.category.category_name, 'Mobile')
