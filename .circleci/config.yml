@@ -48,7 +48,6 @@ jobs:
           command: |
             . venv/bin/activate
             coverage run manage.py test
-            coverage combine
             coverage report -m
       - store_artifacts:
           path: test-reports
