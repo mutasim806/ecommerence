@@ -37,6 +37,10 @@ class TestModels(TestCase):
             Images='/home/mutasim/Desktop/project/ecommerence/media/Images/iphone-6s.jpg',
             product=self.product
         )
+        self.capacity = Capacity.objects.create(
+            Capacity='128GB',
+            product=self.product
+        )
 
     def test_categories(self):
         self.assertEquals(self.categories.category_name, 'Mobile')
@@ -44,25 +48,29 @@ class TestModels(TestCase):
     def test_Product(self):
         self.assertEquals(self.product.product_name, 'Iphone')
         self.assertEquals(self.product.category.category_name, 'Mobile')
-        self.assertEquals(f'{self.product.product_name}', 'Iphone')
+        self.assertEquals(self.product.__str__(), 'Iphone')
 
     def test_productid(self):
         post = Product.objects.get(id=1)
-        self.assertEquals(f'{post.product_name}', 'Iphone')
+        self.assertEquals(post.product_name, 'Iphone')
 
     def test_ProductDetails(self):
         self.assertEquals(self.ProductDetails.price, 2100.00)
         self.assertEquals(self.product.category.category_name, 'Mobile')
+        self.assertEquals(self.ProductDetails.__str__(), 'Iphone')
 
     def test_specification(self):
-        self.assertEquals(self.Specifications.product.product_name, 'Iphone')
+        self.assertEquals(self.Specifications.__str__(), 'Iphone')
 
     def test_Description(self):
         self.assertEquals(self.Description.Image, '/home/mutasim/Desktop/project/ecommerence/media/Images/iphone-6s.jpg')
-        self.assertEquals(self.product.product_name, 'Iphone')
+        self.assertEquals(self.Description.__str__(), 'Iphone')
 
     def test_images(self):
         self.assertEquals(self.Images.Images, '/home/mutasim/Desktop/project/ecommerence/media/Images/iphone-6s.jpg')
-        self.assertEquals(self.product.product_name, 'Iphone')
+        self.assertEquals(self.Images.__str__(), 'Iphone')
+
+    def test_capacity(self):
+        self.assertEquals(self.capacity.__str__(), self.capacity.Capacity)
 
 
